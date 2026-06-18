@@ -27,7 +27,7 @@ notify:
     chat_id: !secret id_telegram_xxxxx
 
 logger:
-  default: critical
+  default: warning
 
 http:
   ip_ban_enabled: true

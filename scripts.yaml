@@ -49,17 +49,17 @@ fermer_les_volet:
   mode: single
   icon: mdi:curtains-closed
 allume_le_sapin:
-  alias: Éteinds le sapin
+  alias: Allume le sapin
   sequence:
-  - type: turn_off
+  - type: turn_on
     device_id: ed6cac79577adff1df9915121bd6a2a9
     entity_id: beaea6132df5563e0ca9a942f070beca
     domain: switch
   mode: single
 eteindre_le_sapin:
-  alias: Allume le sapin
+  alias: Éteins le sapin
   sequence:
-  - type: turn_on
+  - type: turn_off
     device_id: ed6cac79577adff1df9915121bd6a2a9
     entity_id: beaea6132df5563e0ca9a942f070beca
     domain: switch
