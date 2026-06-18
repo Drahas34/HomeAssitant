@@ -76,8 +76,8 @@ views:
             show_brightness_control: true
             collapsible_controls: true
           - type: custom:mushroom-cover-card
-            entity: cover.volet_salon_cover
-            name: Volet salon
+            entity: cover.interrupteur_volet_cuisine_volets
+            name: Cuisine
             show_buttons_control: true
             hide_state: true
           - type: custom:mushroom-cover-card
