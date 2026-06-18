@@ -85,8 +85,20 @@ views:
             name: Baie vitrée
             show_buttons_control: true
             hide_state: true
-      - type: thermostat
-        entity: climate.zone_control_salon
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-climate-card
+            entity: climate.zone_control_salon
+            name: Salon
+            show_temperature_control: true
+            collapsible_controls: true
+          - type: custom:mushroom-climate-card
+            entity: climate.zone_control
+            name: Général
+            show_temperature_control: true
+            collapsible_controls: true
 
       # ---- Chambres
       - type: custom:mushroom-title-card
@@ -113,6 +125,20 @@ views:
             name: Volet ch. Nono
             show_buttons_control: true
             hide_state: true
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-climate-card
+            entity: climate.zone_control_chambre
+            name: Chambre
+            show_temperature_control: true
+            collapsible_controls: true
+          - type: custom:mushroom-climate-card
+            entity: climate.zone_control_chambre_nono
+            name: Chambre Nono
+            show_temperature_control: true
+            collapsible_controls: true
 
       # ---- Bureau & cuisine
       - type: custom:mushroom-title-card
@@ -138,6 +164,11 @@ views:
             name: Volet cuisine
             show_buttons_control: true
             hide_state: true
+      - type: custom:mushroom-climate-card
+        entity: climate.zone_control_bureau
+        name: Bureau
+        show_temperature_control: true
+        collapsible_controls: true
 
       # ---- Piscine
       - type: custom:mushroom-title-card
@@ -159,7 +190,7 @@ views:
             name: Pompe
             icon: mdi:water-pump
             tap_action:
-              action: toggle
+              action: more-info
           - type: custom:mushroom-entity-card
             entity: switch.sonoff_spot_piscine_switch
             name: Spot
