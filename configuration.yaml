@@ -89,92 +89,6 @@ template:
             states('sensor.lixee_zlinky_tic_consommation_heures_pleines')|float
           }}
 
-      - name: "Zendure Total charges"
-        unique_id: zendure_total_charges
-        unit_of_measurement: "kWh"
-        device_class: energy
-        state_class: total_increasing
-        state: >
-          {{
-            states('sensor.solarflow_800_plus_1_total_charges')|float(0)
-            + states('sensor.solarflow_800_plus_2_total_charges')|float(0)
-            + states('sensor.solarflow_800_plus_3_total_charges')|float(0)
-            + states('sensor.solarflow_2400_ac_aggr_charge')|float(0)
-          }}
-
-      - name: "Zendure Total décharges"
-        unique_id: zendure_total_decharges
-        unit_of_measurement: "kWh"
-        device_class: energy
-        state_class: total_increasing
-        state: >
-          {{
-            states('sensor.solarflow_800_plus_1_total_decharges')|float(0)
-            + states('sensor.solarflow_800_plus_2_total_decharges')|float(0)
-            + states('sensor.solarflow_800_plus_3_total_decharges')|float(0)
-            + states('sensor.solarflow_2400_ac_aggr_discharge')|float(0)
-          }}
-
-      - name: "Zendure Puissance charge totale"
-        unique_id: zendure_puissance_charge_totale
-        unit_of_measurement: "W"
-        device_class: power
-        state_class: measurement
-        state: >
-          {{
-            states('sensor.solarflow_800_plus_1_pack_input_power')|float(0)
-            + states('sensor.solarflow_800_plus_2_pack_input_power')|float(0)
-            + states('sensor.solarflow_800_plus_3_pack_input_power')|float(0)
-            + states('sensor.solarflow_2400_ac_pack_input_power')|float(0)
-          }}
-
-      - name: "Zendure Puissance décharge totale"
-        unique_id: zendure_puissance_decharge_totale
-        unit_of_measurement: "W"
-        device_class: power
-        state_class: measurement
-        state: >
-          {{
-            states('sensor.solarflow_800_plus_1_output_pack_power')|float(0)
-            + states('sensor.solarflow_800_plus_2_output_pack_power')|float(0)
-            + states('sensor.solarflow_800_plus_3_output_pack_power')|float(0)
-            + states('sensor.solarflow_2400_ac_output_pack_power')|float(0)
-          }}
-
-      - name: "Zendure SOC Global"
-        unique_id: zendure_soc_global
-        unit_of_measurement: "%"
-        icon: mdi:battery
-        state: >
-          {% set c1 = states('sensor.solarflow_800_plus_1_total_kwh')|float(0) %}
-          {% set c2 = states('sensor.solarflow_800_plus_2_total_kwh')|float(0) %}
-          {% set c3 = states('sensor.solarflow_800_plus_3_total_kwh')|float(0) %}
-          {% set c4 = states('sensor.solarflow_2400_ac_total_kwh')|float(0) %}
-
-          {% set s1 = states('sensor.solarflow_800_plus_1_electric_level')|float(0) %}
-          {% set s2 = states('sensor.solarflow_800_plus_2_electric_level')|float(0) %}
-          {% set s3 = states('sensor.solarflow_800_plus_3_electric_level')|float(0) %}
-          {% set s4 = states('sensor.solarflow_2400_ac_electric_level')|float(0) %}
-
-          {% set total = c1 + c2 + c3 + c4 %}
-
-          {% if total > 0 %}
-            {{ ((s1*c1 + s2*c2 + s3*c3 + s4*c4) / total) | round(0) }}
-          {% else %}
-            0
-          {% endif %}
-
-      - name: "Zendure Puissance nette"
-        unique_id: zendure_puissance_nette
-        unit_of_measurement: "W"
-        device_class: power
-        state_class: measurement
-        state: >
-          {{
-            states('sensor.zendure_puissance_decharge_totale')|float(0)
-            - states('sensor.zendure_puissance_charge_totale')|float(0)
-          }}
-
       - name: "Conso maison hors Tesla"
         unique_id: conso_maison_hors_tesla
         unit_of_measurement: "W"
@@ -185,9 +99,8 @@ template:
           {% set solaire_w = solaire_kw * 1000 %}
 
           {% set reseau_w = states('sensor.shellypro3em_ac15187c66d4_puissance')|float(0) %}
-          {% set batterie_w = states('sensor.zendure_puissance_nette')|float(0) %}
           {% set tesla_w = states('sensor.borne_recharge_puissance_de_charge')|float(0) %}
 
-          {% set maison_totale = solaire_w + reseau_w + batterie_w %}
+          {% set maison_totale = solaire_w + reseau_w %}
           {{ [maison_totale - tesla_w, 0] | max | round(0) }}
 

@@ -178,10 +178,6 @@ views:
             entity: sensor.conso_maison_hors_tesla
             name: Conso maison
             icon: mdi:home-lightning-bolt
-          - type: custom:mushroom-entity-card
-            entity: sensor.zendure_soc_global
-            name: Batterie
-            icon: mdi:battery
 
   # ----------------------------------------------------------------- SYSTEM
   - title: System
