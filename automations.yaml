@@ -88,124 +88,6 @@
     entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
     domain: light
   mode: single
-- id: '1689799504623'
-  alias: Telecommande on/ff
-  description: ''
-  triggers:
-  - device_id: 56cafa1eb38147609805946610d09a5f
-    domain: zha
-    type: remote_button_short_press
-    subtype: button_1
-    trigger: device
-  conditions: []
-  actions:
-  - type: toggle
-    device_id: 228870a42a6285e46c24672e6e777136
-    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
-    domain: light
-  - type: toggle
-    device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
-    entity_id: c652053e8536a294d2a694fe565eb0a2
-    domain: light
-  mode: single
-- id: '1697975352919'
-  alias: Telecommande allumer salon
-  description: ''
-  triggers:
-  - device_id: 56cafa1eb38147609805946610d09a5f
-    domain: zha
-    type: remote_button_short_press
-    subtype: button_4
-    trigger: device
-  conditions: []
-  actions:
-  - type: turn_off
-    device_id: 228870a42a6285e46c24672e6e777136
-    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
-    domain: light
-  mode: single
-- id: '1697975432502'
-  alias: Telecommande allumer salle à manger
-  description: ''
-  triggers:
-  - device_id: 56cafa1eb38147609805946610d09a5f
-    domain: zha
-    type: remote_button_double_press
-    subtype: button_4
-    trigger: device
-  conditions: []
-  actions:
-  - type: toggle
-    device_id: 228870a42a6285e46c24672e6e777136
-    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
-    domain: light
-  mode: single
-- id: '1697975710932'
-  alias: Telecommande augmenter luminosite salle à manger
-  description: ''
-  triggers:
-  - device_id: 56cafa1eb38147609805946610d09a5f
-    domain: zha
-    type: remote_button_short_press
-    subtype: button_2
-    trigger: device
-  conditions:
-  - condition: device
-    type: is_off
-    device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
-    entity_id: c652053e8536a294d2a694fe565eb0a2
-    domain: light
-  actions:
-  - device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
-    domain: light
-    entity_id: c652053e8536a294d2a694fe565eb0a2
-    type: brightness_increase
-  - device_id: 228870a42a6285e46c24672e6e777136
-    domain: light
-    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
-    type: brightness_increase
-  mode: single
-- id: '1697975855392'
-  alias: Telecommande salon diminuer luminosité salle à manger
-  description: ''
-  triggers:
-  - device_id: 56cafa1eb38147609805946610d09a5f
-    domain: zha
-    type: remote_button_short_press
-    subtype: button_3
-    trigger: device
-  conditions:
-  - condition: device
-    type: is_off
-    device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
-    entity_id: c652053e8536a294d2a694fe565eb0a2
-    domain: light
-  actions:
-  - device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
-    domain: light
-    entity_id: c652053e8536a294d2a694fe565eb0a2
-    type: brightness_decrease
-  - device_id: 228870a42a6285e46c24672e6e777136
-    domain: light
-    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
-    type: brightness_decrease
-  mode: single
-- id: '1702414515836'
-  alias: 'Télécommande prise sapin '
-  description: ''
-  trigger:
-  - device_id: 56cafa1eb38147609805946610d09a5f
-    domain: zha
-    platform: device
-    type: remote_button_double_press
-    subtype: button_1
-  condition: []
-  action:
-  - type: toggle
-    device_id: 345fd45801c3c4de9b0bf9e3bdb574ab
-    entity_id: 65732e5ce894a3a7bdadc9e35d40b701
-    domain: switch
-  mode: single
 - id: '1702989195245'
   alias: 'Interrupteur bureau '
   description: ''
@@ -221,29 +103,6 @@
     device_id: 08ed1cd6d0891d1043333d0c3989faae
     entity_id: eab66d8b89e6b70f4455a8663281afb6
     domain: switch
-  mode: single
-- id: '1705221784147'
-  alias: Nouille playlist 1
-  description: ''
-  trigger:
-  - device_id: 5279b013f046adaf5c52690637901e6b
-    domain: zha
-    platform: device
-    type: remote_button_short_press
-    subtype: button_1
-    id: Button1Press
-  condition: []
-  action:
-  - service: media_player.select_source
-    data:
-      entity_id: media_player.spotify_drahas
-      source: Alexa salon
-  - service: media_player.play_media
-    data:
-      media_content_type: playlist
-      media_content_id: https://open.spotify.com/playlist/0KvecZHJMc2OzQCBOvKiVW
-    target:
-      entity_id: media_player.spotify_drahas
   mode: single
 - id: '1705234472554'
   alias: Switch garage
@@ -338,18 +197,14 @@
     action: input_datetime.set_datetime
   variables:
     temperature: '{{ states(''sensor.temperature_piscine_2'') | float(0) }}'
-    duree_h: "{% if temperature < 12 %}\n  2\n{% elif temperature < 18 %}\n  6\n{%
-      elif temperature < 30 %}\n  {{ (temperature / 2) | round(0) }}\n{% else %}\n
-      \ 18\n{% endif %}\n"
-    heure_fin_time: "{{ (now() + timedelta(hours=(duree_h | float)))\n    .strftime('%H:%M:%S')
-      }}\n"
+    duree_h: "{% if temperature < 12 %}\n  2\n{% elif temperature < 18 %}\n  6\n{% elif temperature < 30 %}\n  {{ (temperature / 2) | round(0) }}\n{% else %}\n  18\n{% endif %}\n"
+    heure_fin_time: "{{ (now() + timedelta(hours=(duree_h | float)))\n    .strftime('%H:%M:%S') }}\n"
   mode: single
 - id: '1755078989647'
   alias: Pompe piscine - Arrêt à l'heure de fin
   description: ''
   triggers:
-  - value_template: "{{ states('sensor.time') == \n   states('input_datetime.heure_fin_cycle_pompe_piscine')[0:5]
-      }}\n"
+  - value_template: "{{ states('sensor.time') == \n   states('input_datetime.heure_fin_cycle_pompe_piscine')[0:5] }}\n"
     trigger: template
   actions:
   - action: switch.turn_off
