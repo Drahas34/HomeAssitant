@@ -28,6 +28,10 @@ notify:
 
 logger:
   default: critical
+  logs:
+    # Diagnostic temporaire Cozytouch/Atlantic (a retirer une fois le souci compris)
+    homeassistant.components.overkiz: debug
+    pyoverkiz: debug
 
 http:
   ip_ban_enabled: true
