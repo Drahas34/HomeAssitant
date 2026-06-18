@@ -3,6 +3,11 @@
 # Secrets (mots de passe, tokens, clés API) — JAMAIS sur git
 secrets.yaml
 
+# Fichiers lus par go2rtc/Frigate (ne supportent pas !secret) et contenant
+# des identifiants en clair (RTSP, MQTT) — gardés sur HA, hors du dépôt
+go2rtc.yaml
+backup_config.yaml
+
 # Données d'authentification et d'état interne (tokens, hash de mots de passe)
 .storage/
 .cloud/

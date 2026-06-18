@@ -13,11 +13,6 @@ scene: !include scenes.yaml
 sensor:
   - platform: time_date
     display_options:
-      - "date_time"
-      - "date_time_utc"
-      - "date_time_iso"
-      - "time_date"
-      - "time_utc"
       - "time"
 
 telegram_bot:
@@ -33,8 +28,6 @@ notify:
 
 logger:
   default: critical
-  logs:
-    custom_components.tahoma: debug
 
 http:
   ip_ban_enabled: true
@@ -198,51 +191,3 @@ template:
           {% set maison_totale = solaire_w + reseau_w + batterie_w %}
           {{ [maison_totale - tesla_w, 0] | max | round(0) }}
 
-input_datetime:
-  piscine_start_time:
-    name: Heure départ pompe
-    has_time: true
-    has_date: false
-    icon: mdi:clock-start
-
-  piscine_cycle_start:
-    name: Début cycle piscine (gelé)
-    has_date: true
-    has_time: true
-  piscine_cycle_end:
-    name: Fin cycle piscine (gelé)
-    has_date: true
-    has_time: true
-
-input_number:
-  piscine_seuil_temp:
-    name: Seuil température (°C)
-    min: 0
-    max: 45
-    step: 0.5
-    mode: box
-    icon: mdi:thermometer
-  piscine_min_hours:
-    name: Durée mini (h)
-    min: 0
-    max: 12
-    step: 0.5
-    mode: box
-    icon: mdi:timer-sand
-  piscine_max_hours:
-    name: Durée maxi (h)
-    min: 1
-    max: 24
-    step: 0.5
-    mode: box
-    icon: mdi:timer-plus
-  piscine_cycle_duration_h:
-    name: Durée cycle piscine (gelé)
-    min: 0
-    max: 24
-    step: 0.1
-
-input_boolean:
-  pompe_force:
-    name: Pompe piscine forcée
-    icon: mdi:water-pump
