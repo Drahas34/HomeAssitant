@@ -1,10 +1,11 @@
 # Dashboard "Maison" - configuration Lovelace
-# A coller dans : Dashboard -> crayon (editer) -> menu trois points -> "Modifier en YAML"
-# (Raw configuration editor). Remplace tout le contenu par ce qui suit.
+# Reference versionnee. Le dashboard live est dans HA (.storage, mode UI) ;
+# il est applique a chaud via WebSocket lovelace/config/save (url_path lovelace-home).
 #
-# NB : ce dashboard est stocke par HA dans .storage (mode UI), non charge
-# automatiquement depuis ce fichier. Ce fichier sert de reference versionnee
-# et de source a copier-coller.
+# Thermostats Overkiz : cartes template (pas de controle direct = pas de
+# commande lente au serveur Atlantic). Elles affichent temperature + indicateur
+# marche/arret (couleur + pastille) + la bonne consigne selon chaud/froid ;
+# les controles s'ouvrent dans la popup (more-info) au clic.
 
 title: Maison
 views:
@@ -41,7 +42,7 @@ views:
     path: default_view
     icon: mdi:home
     cards:
-      # Bandeau d'aperçu rapide
+      # Bandeau d'apercu rapide
       - type: custom:mushroom-chips-card
         alignment: center
         chips:
@@ -58,153 +59,206 @@ views:
             entity: sensor.conso_maison_hors_tesla
             icon: mdi:home-lightning-bolt
 
-      # ---- Salon & séjour
-      - type: custom:mushroom-title-card
-        title: Salon & séjour
-      - type: grid
-        columns: 2
-        square: false
+      # ===================================================== SALON & SEJOUR
+      - type: vertical-stack
         cards:
-          - type: custom:mushroom-light-card
-            entity: light.innr_rb_287_c
-            name: Salon
-            show_brightness_control: true
-            collapsible_controls: true
-          - type: custom:mushroom-light-card
-            entity: light.innr_rb_287_c_2
-            name: Salle à manger
-            show_brightness_control: true
-            collapsible_controls: true
-          - type: custom:mushroom-cover-card
-            entity: cover.interrupteur_volet_cuisine_volets
-            name: Cuisine
-            show_buttons_control: true
-            hide_state: true
-          - type: custom:mushroom-cover-card
-            entity: cover.interrupteur_volet_baie_vitree_volets
-            name: Baie vitrée
-            show_buttons_control: true
-            hide_state: true
-      - type: grid
-        columns: 2
-        square: false
-        cards:
-          - type: custom:mushroom-climate-card
-            entity: climate.zone_control_salon
-            name: Salon
-            show_temperature_control: true
-            collapsible_controls: true
-          - type: custom:mushroom-climate-card
-            entity: climate.zone_control
-            name: Général
-            show_temperature_control: true
-            collapsible_controls: true
+          - type: custom:mushroom-title-card
+            title: Salon & séjour
+            subtitle: ""
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: custom:mushroom-template-card
+                entity: climate.zone_control_salon
+                primary: Salon
+                secondary: >-
+                  {% set t = state_attr(entity,'current_temperature') %}
+                  {% set a = state_attr(entity,'hvac_action') %}
+                  {% set lo = state_attr(entity,'target_temp_low') %}
+                  {% set hi = state_attr(entity,'target_temp_high') %}
+                  {{ t }}°{% if is_state(entity,'off') %} · Éteint{% elif a == 'heating' %} · chauffe → {{ lo }}°{% elif a == 'cooling' %} · refroidit → {{ hi }}°{% else %} · {{ lo }}–{{ hi }}°{% endif %}
+                icon: mdi:thermostat
+                icon_color: >-
+                  {% set a = state_attr(entity,'hvac_action') %}
+                  {% if is_state(entity,'off') %}grey{% elif a == 'heating' %}orange{% elif a == 'cooling' %}blue{% else %}green{% endif %}
+                badge_icon: mdi:power
+                badge_color: "{{ 'disabled' if is_state(entity,'off') else 'green' }}"
+                tap_action:
+                  action: more-info
+              - type: custom:mushroom-template-card
+                entity: climate.zone_control
+                primary: Général
+                secondary: >-
+                  {% set m = states(entity) %}
+                  {{ {'off':'Éteint','cool':'Climatisation','heat':'Chauffage','dry':'Déshumidification','auto':'Auto'}.get(m, m) }}
+                icon: mdi:home-thermometer
+                icon_color: >-
+                  {% if is_state(entity,'off') %}grey{% elif is_state(entity,'cool') %}blue{% elif is_state(entity,'heat') %}orange{% else %}green{% endif %}
+                badge_icon: mdi:power
+                badge_color: "{{ 'disabled' if is_state(entity,'off') else 'green' }}"
+                tap_action:
+                  action: more-info
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: custom:mushroom-light-card
+                entity: light.innr_rb_287_c
+                name: Salon
+                show_brightness_control: true
+                collapsible_controls: true
+              - type: custom:mushroom-light-card
+                entity: light.innr_rb_287_c_2
+                name: Salle à manger
+                show_brightness_control: true
+                collapsible_controls: true
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: custom:mushroom-cover-card
+                entity: cover.interrupteur_volet_cuisine_volets
+                name: Cuisine
+                show_buttons_control: true
+                hide_state: true
+              - type: custom:mushroom-cover-card
+                entity: cover.interrupteur_volet_baie_vitree_volets
+                name: Baie vitrée
+                show_buttons_control: true
+                hide_state: true
 
-      # ---- Chambres
-      - type: custom:mushroom-title-card
-        title: Chambres
-      - type: grid
-        columns: 2
-        square: false
+      # ============================================================= CHAMBRE
+      - type: vertical-stack
         cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.zone_control_io_1211346_9_temperature
-            name: Chambre
-            icon: mdi:thermometer
-          - type: custom:mushroom-entity-card
-            entity: sensor.zone_control_io_1211346_7_temperature
-            name: Chambre Nono
-            icon: mdi:thermometer
-          - type: custom:mushroom-cover-card
-            entity: cover.interrupteur_volet_chambre_volets
-            name: Volet chambre
-            show_buttons_control: true
-            hide_state: true
-          - type: custom:mushroom-cover-card
-            entity: cover.interrupteur_volet_chambre_nono_volets
-            name: Volet ch. Nono
-            show_buttons_control: true
-            hide_state: true
-      - type: grid
-        columns: 2
-        square: false
-        cards:
-          - type: custom:mushroom-climate-card
+          - type: custom:mushroom-title-card
+            title: Chambre
+            subtitle: ""
+          - type: custom:mushroom-template-card
             entity: climate.zone_control_chambre
-            name: Chambre
-            show_temperature_control: true
-            collapsible_controls: true
-          - type: custom:mushroom-climate-card
-            entity: climate.zone_control_chambre_nono
-            name: Chambre Nono
-            show_temperature_control: true
-            collapsible_controls: true
-
-      # ---- Bureau & cuisine
-      - type: custom:mushroom-title-card
-        title: Bureau & cuisine
-      - type: grid
-        columns: 2
-        square: false
-        cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.zone_control_io_1211346_5_temperature
-            name: Bureau
-            icon: mdi:thermometer
-          - type: custom:mushroom-entity-card
-            entity: light.ampoule_entree_light
-            name: Entrée
-          - type: custom:mushroom-cover-card
-            entity: cover.interrupteur_volet_bureau_volets
-            name: Volet bureau
-            show_buttons_control: true
-            hide_state: true
-          - type: custom:mushroom-cover-card
-            entity: cover.interrupteur_volet_cuisine_volets
-            name: Volet cuisine
-            show_buttons_control: true
-            hide_state: true
-      - type: custom:mushroom-climate-card
-        entity: climate.zone_control_bureau
-        name: Bureau
-        show_temperature_control: true
-        collapsible_controls: true
-
-      # ---- Piscine
-      - type: custom:mushroom-title-card
-        title: Piscine
-      - type: grid
-        columns: 2
-        square: false
-        cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.temperature_piscine_2
-            name: Température
-            icon: mdi:pool-thermometer
-          - type: custom:mushroom-entity-card
-            entity: sensor.temp_exterieur_temperature
-            name: Extérieur
-            icon: mdi:thermometer
-          - type: custom:mushroom-entity-card
-            entity: switch.relais_pompe_piscine
-            name: Pompe
-            icon: mdi:water-pump
+            primary: Chambre
+            secondary: >-
+              {% set t = state_attr(entity,'current_temperature') %}
+              {% set a = state_attr(entity,'hvac_action') %}
+              {% set lo = state_attr(entity,'target_temp_low') %}
+              {% set hi = state_attr(entity,'target_temp_high') %}
+              {{ t }}°{% if is_state(entity,'off') %} · Éteint{% elif a == 'heating' %} · chauffe → {{ lo }}°{% elif a == 'cooling' %} · refroidit → {{ hi }}°{% else %} · {{ lo }}–{{ hi }}°{% endif %}
+            icon: mdi:thermostat
+            icon_color: >-
+              {% set a = state_attr(entity,'hvac_action') %}
+              {% if is_state(entity,'off') %}grey{% elif a == 'heating' %}orange{% elif a == 'cooling' %}blue{% else %}green{% endif %}
+            badge_icon: mdi:power
+            badge_color: "{{ 'disabled' if is_state(entity,'off') else 'green' }}"
             tap_action:
               action: more-info
-          - type: custom:mushroom-entity-card
-            entity: switch.sonoff_spot_piscine_switch
-            name: Spot
-            icon: mdi:lightbulb
-            tap_action:
-              action: toggle
+          - type: custom:mushroom-cover-card
+            entity: cover.interrupteur_volet_chambre_volets
+            name: Chambre
+            show_buttons_control: true
+            hide_state: true
 
-      # ---- Énergie
-      - type: custom:mushroom-title-card
-        title: Énergie
-      - type: grid
-        columns: 2
-        square: false
+      # ======================================================== CHAMBRE NONO
+      - type: vertical-stack
         cards:
+          - type: custom:mushroom-title-card
+            title: Chambre Nono
+            subtitle: ""
+          - type: custom:mushroom-template-card
+            entity: climate.zone_control_chambre_nono
+            primary: Chambre Nono
+            secondary: >-
+              {% set t = state_attr(entity,'current_temperature') %}
+              {% set a = state_attr(entity,'hvac_action') %}
+              {% set lo = state_attr(entity,'target_temp_low') %}
+              {% set hi = state_attr(entity,'target_temp_high') %}
+              {{ t }}°{% if is_state(entity,'off') %} · Éteint{% elif a == 'heating' %} · chauffe → {{ lo }}°{% elif a == 'cooling' %} · refroidit → {{ hi }}°{% else %} · {{ lo }}–{{ hi }}°{% endif %}
+            icon: mdi:thermostat
+            icon_color: >-
+              {% set a = state_attr(entity,'hvac_action') %}
+              {% if is_state(entity,'off') %}grey{% elif a == 'heating' %}orange{% elif a == 'cooling' %}blue{% else %}green{% endif %}
+            badge_icon: mdi:power
+            badge_color: "{{ 'disabled' if is_state(entity,'off') else 'green' }}"
+            tap_action:
+              action: more-info
+          - type: custom:mushroom-cover-card
+            entity: cover.interrupteur_volet_chambre_nono_volets
+            name: Chambre Nono
+            show_buttons_control: true
+            hide_state: true
+
+      # ============================================================== BUREAU
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: Bureau
+            subtitle: ""
+          - type: custom:mushroom-template-card
+            entity: climate.zone_control_bureau
+            primary: Bureau
+            secondary: >-
+              {% set t = state_attr(entity,'current_temperature') %}
+              {% set a = state_attr(entity,'hvac_action') %}
+              {% set lo = state_attr(entity,'target_temp_low') %}
+              {% set hi = state_attr(entity,'target_temp_high') %}
+              {{ t }}°{% if is_state(entity,'off') %} · Éteint{% elif a == 'heating' %} · chauffe → {{ lo }}°{% elif a == 'cooling' %} · refroidit → {{ hi }}°{% else %} · {{ lo }}–{{ hi }}°{% endif %}
+            icon: mdi:thermostat
+            icon_color: >-
+              {% set a = state_attr(entity,'hvac_action') %}
+              {% if is_state(entity,'off') %}grey{% elif a == 'heating' %}orange{% elif a == 'cooling' %}blue{% else %}green{% endif %}
+            badge_icon: mdi:power
+            badge_color: "{{ 'disabled' if is_state(entity,'off') else 'green' }}"
+            tap_action:
+              action: more-info
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: custom:mushroom-cover-card
+                entity: cover.interrupteur_volet_bureau_volets
+                name: Bureau
+                show_buttons_control: true
+                hide_state: true
+              - type: custom:mushroom-entity-card
+                entity: light.ampoule_entree_light
+                name: Entrée
+
+      # ============================================================= PISCINE
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: Piscine
+            subtitle: ""
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.temperature_piscine_2
+                name: Température
+                icon: mdi:pool-thermometer
+              - type: custom:mushroom-entity-card
+                entity: sensor.temp_exterieur_temperature
+                name: Extérieur
+                icon: mdi:thermometer
+              - type: custom:mushroom-entity-card
+                entity: switch.relais_pompe_piscine
+                name: Pompe
+                icon: mdi:water-pump
+                tap_action:
+                  action: more-info
+              - type: custom:mushroom-entity-card
+                entity: switch.sonoff_spot_piscine_switch
+                name: Spot
+                icon: mdi:lightbulb
+                tap_action:
+                  action: more-info
+
+      # ============================================================= ENERGIE
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: Énergie
+            subtitle: ""
           - type: custom:mushroom-entity-card
             entity: sensor.conso_maison_hors_tesla
             name: Conso maison
