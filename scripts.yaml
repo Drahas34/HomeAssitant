@@ -1,0 +1,66 @@
+ouvre_les_volet:
+  alias: Ouvre les volets
+  sequence:
+  - device_id: 05fc09c242a5aa0e463f38270fa24c13
+    domain: cover
+    entity_id: c95f0d3e337556efabd7cf923c535983
+    type: open
+  - device_id: 5d05210c6dcda6ff5892a49bf4ce051f
+    domain: cover
+    entity_id: 5613bbef6685e85fb4d6b98774c93ac6
+    type: open
+  - device_id: b4666f77cc846be79f290543bed1071a
+    domain: cover
+    entity_id: 0bb6fcecd55e5d8efc9c428f0fadcdf9
+    type: open
+  - device_id: 5dfa3b71b526785cf1f0ddba7d67036d
+    domain: cover
+    entity_id: 949b2500717a6d6bd724a411c40451c7
+    type: open
+  - device_id: fa992cf80f97cbd921e0a3fba1bb83ab
+    domain: cover
+    entity_id: a6ab4477aa0636102392a967535d3333
+    type: open
+  mode: single
+  icon: mdi:curtains
+fermer_les_volet:
+  alias: Fermer les volets
+  sequence:
+  - device_id: 05fc09c242a5aa0e463f38270fa24c13
+    domain: cover
+    entity_id: c95f0d3e337556efabd7cf923c535983
+    type: close
+  - device_id: 5d05210c6dcda6ff5892a49bf4ce051f
+    domain: cover
+    entity_id: 5613bbef6685e85fb4d6b98774c93ac6
+    type: close
+  - device_id: b4666f77cc846be79f290543bed1071a
+    domain: cover
+    entity_id: 0bb6fcecd55e5d8efc9c428f0fadcdf9
+    type: close
+  - device_id: 5dfa3b71b526785cf1f0ddba7d67036d
+    domain: cover
+    entity_id: 949b2500717a6d6bd724a411c40451c7
+    type: close
+  - device_id: fa992cf80f97cbd921e0a3fba1bb83ab
+    domain: cover
+    entity_id: a6ab4477aa0636102392a967535d3333
+    type: close
+  mode: single
+  icon: mdi:curtains-closed
+allume_le_sapin:
+  alias: Éteinds le sapin
+  sequence:
+  - type: turn_off
+    device_id: ed6cac79577adff1df9915121bd6a2a9
+    entity_id: beaea6132df5563e0ca9a942f070beca
+    domain: switch
+  mode: single
+eteindre_le_sapin:
+  alias: Allume le sapin
+  sequence:
+  - type: turn_on
+    device_id: ed6cac79577adff1df9915121bd6a2a9
+    entity_id: beaea6132df5563e0ca9a942f070beca
+    domain: switch
+  mode: single

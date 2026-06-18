@@ -1,0 +1,46 @@
+# ===== Home Assistant – fichiers à NE JAMAIS versionner =====
+
+# Secrets (mots de passe, tokens, clés API) — JAMAIS sur git
+secrets.yaml
+
+# Données d'authentification et d'état interne (tokens, hash de mots de passe)
+.storage/
+.cloud/
+.cache/
+
+# Bases de données (volumineuses + données runtime)
+*.db
+*.db-shm
+*.db-wal
+
+# Journaux
+*.log
+*.log.*
+home-assistant.log*
+OZW_Log.txt
+
+# Fichiers runtime / système
+.HA_VERSION
+.ha_run.lock
+*.pid
+tts/
+deps/
+
+# Sauvegardes
+/backups/
+*.tar
+
+# Code tiers géré par HACS (réinstallable) — décommente pour versionner
+custom_components/
+www/community/
+
+# ESPHome : dépôt git autonome géré par l'add-on (contient ses propres secrets)
+esphome
+
+# Logs zigbee2mqtt
+zigbee2mqtt/log/
+
+# Divers OS / éditeur
+Thumbs.db
+.DS_Store
+.vscode/

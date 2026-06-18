@@ -1,0 +1,386 @@
+- id: '1682614059175'
+  alias: Lancement machine à laver
+  description: ''
+  trigger:
+  - platform: time
+    at: 05:00:00
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 2fed9f38722cf4a06b9e0d6355608ad1
+    entity_id: switch.tz3000_2putqrmw_ts011f_switch
+    domain: switch
+  - type: turn_on
+    device_id: f14e452ee64165925a1b5c0818299639
+    entity_id: 2a422a08788f8b77093913c97367dc1c
+    domain: switch
+  mode: single
+- id: '1686836282630'
+  alias: Ouvrir les volet au levé de soleil
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunrise
+    offset: 00:30:00
+  condition: []
+  action:
+  - device_id: 05fc09c242a5aa0e463f38270fa24c13
+    domain: cover
+    entity_id: c95f0d3e337556efabd7cf923c535983
+    type: open
+  - device_id: fa992cf80f97cbd921e0a3fba1bb83ab
+    domain: cover
+    entity_id: a6ab4477aa0636102392a967535d3333
+    type: open
+  mode: single
+- id: '1686837430726'
+  alias: 'Absence : ouvrir les volets'
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunrise
+    offset: 0
+  condition:
+  - condition: state
+    entity_id: input_boolean.mode_absence
+    state: 'on'
+  action:
+  - service: script.ouvre_les_volet
+    data: {}
+  mode: single
+- id: '1686837771055'
+  alias: 'Absence : fermer les volets'
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: 0
+  condition:
+  - condition: state
+    entity_id: input_boolean.mode_absence
+    state: 'on'
+  action:
+  - service: script.fermer_les_volet
+    data: {}
+  mode: single
+- id: '1688141499339'
+  alias: Interrupteur salon
+  description: ''
+  triggers:
+  - device_id: df34cc648f1e83594d8a3837c2bdc380
+    domain: zha
+    type: remote_button_short_press
+    subtype: remote_button_short_press
+    trigger: device
+  - device_id: 66bd10f93b8eb1292a7518dc9654ab31
+    domain: zha
+    type: remote_button_short_press
+    subtype: remote_button_short_press
+    trigger: device
+  conditions: []
+  actions:
+  - type: toggle
+    device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
+    entity_id: c652053e8536a294d2a694fe565eb0a2
+    domain: light
+  - type: toggle
+    device_id: 228870a42a6285e46c24672e6e777136
+    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
+    domain: light
+  mode: single
+- id: '1689799504623'
+  alias: Telecommande on/ff
+  description: ''
+  triggers:
+  - device_id: 56cafa1eb38147609805946610d09a5f
+    domain: zha
+    type: remote_button_short_press
+    subtype: button_1
+    trigger: device
+  conditions: []
+  actions:
+  - type: toggle
+    device_id: 228870a42a6285e46c24672e6e777136
+    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
+    domain: light
+  - type: toggle
+    device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
+    entity_id: c652053e8536a294d2a694fe565eb0a2
+    domain: light
+  mode: single
+- id: '1697975352919'
+  alias: Telecommande allumer salon
+  description: ''
+  triggers:
+  - device_id: 56cafa1eb38147609805946610d09a5f
+    domain: zha
+    type: remote_button_short_press
+    subtype: button_4
+    trigger: device
+  conditions: []
+  actions:
+  - type: turn_off
+    device_id: 228870a42a6285e46c24672e6e777136
+    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
+    domain: light
+  mode: single
+- id: '1697975432502'
+  alias: Telecommande allumer salle à manger
+  description: ''
+  triggers:
+  - device_id: 56cafa1eb38147609805946610d09a5f
+    domain: zha
+    type: remote_button_double_press
+    subtype: button_4
+    trigger: device
+  conditions: []
+  actions:
+  - type: toggle
+    device_id: 228870a42a6285e46c24672e6e777136
+    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
+    domain: light
+  mode: single
+- id: '1697975710932'
+  alias: Telecommande augmenter luminosite salle à manger
+  description: ''
+  triggers:
+  - device_id: 56cafa1eb38147609805946610d09a5f
+    domain: zha
+    type: remote_button_short_press
+    subtype: button_2
+    trigger: device
+  conditions:
+  - condition: device
+    type: is_off
+    device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
+    entity_id: c652053e8536a294d2a694fe565eb0a2
+    domain: light
+  actions:
+  - device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
+    domain: light
+    entity_id: c652053e8536a294d2a694fe565eb0a2
+    type: brightness_increase
+  - device_id: 228870a42a6285e46c24672e6e777136
+    domain: light
+    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
+    type: brightness_increase
+  mode: single
+- id: '1697975855392'
+  alias: Telecommande salon diminuer luminosité salle à manger
+  description: ''
+  triggers:
+  - device_id: 56cafa1eb38147609805946610d09a5f
+    domain: zha
+    type: remote_button_short_press
+    subtype: button_3
+    trigger: device
+  conditions:
+  - condition: device
+    type: is_off
+    device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
+    entity_id: c652053e8536a294d2a694fe565eb0a2
+    domain: light
+  actions:
+  - device_id: 2e2bbb67377ebb2e9de6ed2e6387f7a5
+    domain: light
+    entity_id: c652053e8536a294d2a694fe565eb0a2
+    type: brightness_decrease
+  - device_id: 228870a42a6285e46c24672e6e777136
+    domain: light
+    entity_id: 6dbcc3c1313a59ecaf0e7c391a271887
+    type: brightness_decrease
+  mode: single
+- id: '1702414515836'
+  alias: 'Télécommande prise sapin '
+  description: ''
+  trigger:
+  - device_id: 56cafa1eb38147609805946610d09a5f
+    domain: zha
+    platform: device
+    type: remote_button_double_press
+    subtype: button_1
+  condition: []
+  action:
+  - type: toggle
+    device_id: 345fd45801c3c4de9b0bf9e3bdb574ab
+    entity_id: 65732e5ce894a3a7bdadc9e35d40b701
+    domain: switch
+  mode: single
+- id: '1702989195245'
+  alias: 'Interrupteur bureau '
+  description: ''
+  trigger:
+  - device_id: af9768710fbf8f52336656b46fb4eac0
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: button_1
+  condition: []
+  action:
+  - type: toggle
+    device_id: 08ed1cd6d0891d1043333d0c3989faae
+    entity_id: eab66d8b89e6b70f4455a8663281afb6
+    domain: switch
+  mode: single
+- id: '1705221784147'
+  alias: Nouille playlist 1
+  description: ''
+  trigger:
+  - device_id: 5279b013f046adaf5c52690637901e6b
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: button_1
+    id: Button1Press
+  condition: []
+  action:
+  - service: media_player.select_source
+    data:
+      entity_id: media_player.spotify_drahas
+      source: Alexa salon
+  - service: media_player.play_media
+    data:
+      media_content_type: playlist
+      media_content_id: https://open.spotify.com/playlist/0KvecZHJMc2OzQCBOvKiVW
+    target:
+      entity_id: media_player.spotify_drahas
+  mode: single
+- id: '1705234472554'
+  alias: Switch garage
+  description: ''
+  trigger:
+  - device_id: 02690c3facce560c409a1eb8f14e2a9e
+    domain: zha
+    platform: device
+    type: remote_button_short_press
+    subtype: button_1
+  condition: []
+  action:
+  - type: toggle
+    device_id: ab976da29ba2df8a5d67fff814770fed
+    entity_id: d567a1eb462f8a793389aa40f4d208af
+    domain: switch
+  mode: single
+- id: '1705748063424'
+  alias: Éclairage hall d'entrée
+  description: Aaa
+  triggers:
+  - type: motion
+    device_id: b59735b6ee6c50ce0dea30d4ad206757
+    entity_id: 9be2c6bf5848000628124a2e61b4d2b5
+    domain: binary_sensor
+    trigger: device
+  conditions: []
+  actions:
+  - type: turn_on
+    device_id: fb4f5f25638ce9ac40ee812b6d5fd06d
+    entity_id: f7bdf94bd9f01d97bdc07e9ee92cfaca
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - type: turn_off
+    device_id: fb4f5f25638ce9ac40ee812b6d5fd06d
+    entity_id: f7bdf94bd9f01d97bdc07e9ee92cfaca
+    domain: switch
+  mode: single
+- id: '1705749115242'
+  alias: 'Éclairage entrée '
+  description: Aaa
+  trigger:
+  - type: motion
+    platform: device
+    device_id: e99a2a7e35f05deeb636c18741fc89b8
+    entity_id: 70140c98594cce80d613a4e42702a9ab
+    domain: binary_sensor
+  condition:
+  - type: is_illuminance
+    condition: device
+    device_id: e99a2a7e35f05deeb636c18741fc89b8
+    entity_id: f541011680d0de2a2b66cc5ebd5a20de
+    domain: sensor
+    below: 70
+  action:
+  - type: turn_on
+    device_id: 1eff8475e5a79f8f90d28b2d8acd845c
+    entity_id: b38d3eedaf358b72f829cfb2bc36f633
+    domain: switch
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+  - type: turn_off
+    device_id: 1eff8475e5a79f8f90d28b2d8acd845c
+    entity_id: b38d3eedaf358b72f829cfb2bc36f633
+    domain: switch
+  mode: single
+- id: '1755078110224'
+  alias: 'Pompe piscine : allumage'
+  description: ''
+  triggers:
+  - trigger: time
+    at: 09:00:00
+  conditions: []
+  actions:
+  - metadata: {}
+    data: {}
+    action: switch.turn_on
+    enabled: true
+    target:
+      entity_id: switch.relais_pompe_piscine
+  - target:
+      entity_id: input_datetime.heure_fin_cycle_pompe_piscine
+    data:
+      time: '{{ heure_fin_time }}'
+    action: input_datetime.set_datetime
+  variables:
+    temperature: '{{ states(''sensor.temperature_piscine_2'') | float(0) }}'
+    duree_h: "{% if temperature < 12 %}\n  2\n{% elif temperature < 18 %}\n  6\n{%
+      elif temperature < 30 %}\n  {{ (temperature / 2) | round(0) }}\n{% else %}\n
+      \ 18\n{% endif %}\n"
+    heure_fin_time: "{{ (now() + timedelta(hours=(duree_h | float)))\n    .strftime('%H:%M:%S')
+      }}\n"
+  mode: single
+- id: '1755078989647'
+  alias: Pompe piscine - Arrêt à l'heure de fin
+  description: ''
+  triggers:
+  - value_template: "{{ states('sensor.time') == \n   states('input_datetime.heure_fin_cycle_pompe_piscine')[0:5]
+      }}\n"
+    trigger: template
+  actions:
+  - action: switch.turn_off
+    data: {}
+    target:
+      entity_id: switch.relais_pompe_piscine
+  mode: single
+- id: '1780249038474'
+  alias: Arrosage jardinière - récupération
+  description: Arrosage goutte-à-goutte matin pendant 45 min
+  triggers:
+  - at: 06:00:00
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - tue
+    - fri
+    - sun
+  actions:
+  - target:
+      entity_id: switch.relais_eau_entree
+    action: switch.turn_on
+    data: {}
+  - delay:
+      hours: 1
+      minutes: 15
+      seconds: 0
+      milliseconds: 0
+  - target:
+      entity_id: switch.relais_eau_entree
+    action: switch.turn_off
+    data: {}
+  mode: single
