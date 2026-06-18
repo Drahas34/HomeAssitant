@@ -49,3 +49,4 @@ zigbee2mqtt/log/
 Thumbs.db
 .DS_Store
 .vscode/
+.claude/

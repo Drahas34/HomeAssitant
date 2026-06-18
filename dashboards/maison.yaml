@@ -1,0 +1,205 @@
+# Dashboard "Maison" - configuration Lovelace
+# A coller dans : Dashboard -> crayon (editer) -> menu trois points -> "Modifier en YAML"
+# (Raw configuration editor). Remplace tout le contenu par ce qui suit.
+#
+# NB : ce dashboard est stocke par HA dans .storage (mode UI), non charge
+# automatiquement depuis ce fichier. Ce fichier sert de reference versionnee
+# et de source a copier-coller.
+
+title: Maison
+views:
+  # ---------------------------------------------------------------- PISCINE
+  - title: Piscine
+    path: piscine
+    icon: mdi:pool
+    badges: []
+    cards:
+      - type: custom:apexcharts-card
+        apex_config:
+          chart:
+            height: 200px
+        graph_span: 72h
+        all_series_config:
+          stroke_width: 3
+        header:
+          show: true
+          show_states: true
+          colorize_states: true
+        series:
+          - entity: sensor.temp_exterieur_temperature
+            name: Extérieur
+            color: yellow
+          - entity: sensor.temperature_piscine_2
+            name: Piscine
+        yaxis:
+          - min: "|-1|"
+            max: "|+1|"
+            show: false
+
+  # ------------------------------------------------------------------- HOME
+  - title: Home
+    path: default_view
+    icon: mdi:home
+    cards:
+      # Bandeau d'aperçu rapide
+      - type: custom:mushroom-chips-card
+        alignment: center
+        chips:
+          - type: entity
+            entity: sensor.time
+            icon: mdi:clock-outline
+          - type: entity
+            entity: sensor.temp_exterieur_temperature
+            icon: mdi:thermometer
+          - type: entity
+            entity: sensor.rte_tempo_couleur_actuelle_visuel
+            icon: mdi:flash
+          - type: entity
+            entity: sensor.conso_maison_hors_tesla
+            icon: mdi:home-lightning-bolt
+
+      # ---- Salon & séjour
+      - type: custom:mushroom-title-card
+        title: Salon & séjour
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-light-card
+            entity: light.innr_rb_287_c
+            name: Salon
+            show_brightness_control: true
+            collapsible_controls: true
+          - type: custom:mushroom-light-card
+            entity: light.innr_rb_287_c_2
+            name: Salle à manger
+            show_brightness_control: true
+            collapsible_controls: true
+          - type: custom:mushroom-cover-card
+            entity: cover.volet_salon_cover
+            name: Volet salon
+            show_buttons_control: true
+            hide_state: true
+          - type: custom:mushroom-cover-card
+            entity: cover.interrupteur_volet_baie_vitree_volets
+            name: Baie vitrée
+            show_buttons_control: true
+            hide_state: true
+      - type: thermostat
+        entity: climate.zone_control_salon
+
+      # ---- Chambres
+      - type: custom:mushroom-title-card
+        title: Chambres
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.zone_control_io_1211346_9_temperature
+            name: Chambre
+            icon: mdi:thermometer
+          - type: custom:mushroom-entity-card
+            entity: sensor.zone_control_io_1211346_7_temperature
+            name: Chambre Nono
+            icon: mdi:thermometer
+          - type: custom:mushroom-cover-card
+            entity: cover.interrupteur_volet_chambre_volets
+            name: Volet chambre
+            show_buttons_control: true
+            hide_state: true
+          - type: custom:mushroom-cover-card
+            entity: cover.interrupteur_volet_chambre_nono_volets
+            name: Volet ch. Nono
+            show_buttons_control: true
+            hide_state: true
+
+      # ---- Bureau & cuisine
+      - type: custom:mushroom-title-card
+        title: Bureau & cuisine
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.zone_control_io_1211346_5_temperature
+            name: Bureau
+            icon: mdi:thermometer
+          - type: custom:mushroom-entity-card
+            entity: light.ampoule_entree_light
+            name: Entrée
+          - type: custom:mushroom-cover-card
+            entity: cover.interrupteur_volet_bureau_volets
+            name: Volet bureau
+            show_buttons_control: true
+            hide_state: true
+          - type: custom:mushroom-cover-card
+            entity: cover.interrupteur_volet_cuisine_volets
+            name: Volet cuisine
+            show_buttons_control: true
+            hide_state: true
+
+      # ---- Piscine
+      - type: custom:mushroom-title-card
+        title: Piscine
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.temperature_piscine_2
+            name: Température
+            icon: mdi:pool-thermometer
+          - type: custom:mushroom-entity-card
+            entity: sensor.temp_exterieur_temperature
+            name: Extérieur
+            icon: mdi:thermometer
+          - type: custom:mushroom-entity-card
+            entity: switch.relais_pompe_piscine
+            name: Pompe
+            icon: mdi:water-pump
+            tap_action:
+              action: toggle
+          - type: custom:mushroom-entity-card
+            entity: switch.sonoff_spot_piscine_switch
+            name: Spot
+            icon: mdi:lightbulb
+            tap_action:
+              action: toggle
+
+      # ---- Énergie
+      - type: custom:mushroom-title-card
+        title: Énergie
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.conso_maison_hors_tesla
+            name: Conso maison
+            icon: mdi:home-lightning-bolt
+          - type: custom:mushroom-entity-card
+            entity: sensor.zendure_soc_global
+            name: Batterie
+            icon: mdi:battery
+
+  # ----------------------------------------------------------------- SYSTEM
+  - title: System
+    path: system
+    icon: mdi:desktop-classic
+    badges: []
+    cards:
+      - type: entities
+        entities:
+          - entity: sensor.system_monitor_last_boot
+          - entity: sensor.system_monitor_load_1m
+          - entity: sensor.system_monitor_load_5m
+          - entity: sensor.system_monitor_load_15m
+          - entity: sensor.system_monitor_processor_temperature
+          - entity: sensor.system_monitor_processor_use
+          - entity: sensor.system_monitor_disk_free
+          - entity: sensor.system_monitor_memory_use
+          - entity: sensor.system_monitor_memory_use_percent
+          - entity: sensor.system_monitor_swap_use_percent
+          - entity: sensor.system_monitor_swap_use
+          - entity: sensor.system_monitor_swap_free
